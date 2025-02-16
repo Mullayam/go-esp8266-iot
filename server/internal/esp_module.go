@@ -22,24 +22,6 @@ type LogMessage struct {
 	Log string `json:"log"`
 }
 
-func handleRequest(w http.ResponseWriter, r *http.Request) {
-	// Check the URL path to determine the action
-	action := r.URL.Path[len("/"):]
-	if action != "on" && action != "off" {
-		http.Error(w, "Invalid action. Use /on or /off", http.StatusBadRequest)
-		return
-	}
-
-	// Control the smart plug by calling the ESP8266
-	err := controlSmartPlug(action)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	// Send a success response
-	fmt.Fprintf(w, "Smart plug turned %s", action)
-}
 func controlSmartPlug(action string) error {
 	var url string
 
@@ -62,6 +44,24 @@ func controlSmartPlug(action string) error {
 	// Print the response (optional)
 	fmt.Printf("Response: %s\n", resp.Status)
 	return nil
+}
+func handleRequest(w http.ResponseWriter, r *http.Request) {
+	// Check the URL path to determine the action
+	action := r.URL.Path[len("/"):]
+	if action != "on" && action != "off" {
+		http.Error(w, "Invalid action. Use /on or /off", http.StatusBadRequest)
+		return
+	}
+
+	// Control the smart plug by calling the ESP8266
+	err := controlSmartPlug(action)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Send a success response
+	fmt.Fprintf(w, "Smart plug turned %s", action)
 }
 
 // controlRelayHandler handles requests to control the relay

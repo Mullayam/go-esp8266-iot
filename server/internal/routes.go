@@ -17,6 +17,9 @@ func RegisterRoutes() *mux.Router {
 	router.HandleFunc("/check-light", checkLightHandler).Methods(http.MethodPost)
 	router.HandleFunc("/google-mini", handleRequest).Methods(http.MethodPost)
 
+	router.HandleFunc("/register", registerCamera).Methods(http.MethodPost)
+	router.HandleFunc("/stream", availableStreams).Methods(http.MethodGet)
+
 	router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("./static/"))))
 
 	return router
